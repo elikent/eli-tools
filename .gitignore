@@ -1,12 +1,39 @@
 # Python caches
-__pychache__/
+__pycache__/
 *.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.egg-info/
+*.dist-info/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
 
 # Packaging/build artifacts
 *.egg-info/
 *dist-info/
 build/
 dist/
+*.egg
 
 # Misc
 .ipynb_checkpoints/
+
+# venvs
+.venv/
+venv/
+env/
+
+# coverage & tooling
+.coverage
+coverage.xml
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# env/secrets (keep these out of git)
+.env
