@@ -1,0 +1,12 @@
+# Python caches
+__pychache__/
+*.py[cod]
+
+# Packaging/build artifacts
+*.egg-info/
+*dist-info/
+build/
+dist/
+
+# Misc
+.ipynb_checkpoints/

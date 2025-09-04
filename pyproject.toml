@@ -1,0 +1,30 @@
+[project]
+name = "eli-tools"
+version = "0.1.0"
+description = "Eli's tiny toolbox (filesystem helpers, etc.)"
+requires-python = ">=3.11"
+dependencies = []
+
+# For helpers specific to pandas or pyarrow, people can pip install -e ../eli-tools[pandas]
+[project.optional-dependencies]
+pandas = ["pandas>=2.2", "pyarrow>=16"]
+dev = ["pytest>=8", "ruff>=0.5", "mypy>=1.10"]
+
+# Tells pip to use setuptools to build/install the package
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# Tell setuptools we use the 'src' layout. Therefore, find packages under "src"
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+eli_tools = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
