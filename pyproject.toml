@@ -25,6 +25,24 @@ where = ["src"]
 [tool.setuptools.package-data]
 eli_tools = ["py.typed"]
 
+# Ruff
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py312"
+extend-exclude = ['.venv']
+extend-include = ['*.ipynb']
+
+[tool.ruff.lint]
+# Keep it small and high-signal
+# E/F: pycodestyle/pyflakes, I: import order, UP: pyupgrade, B: bugbear,
+# C4: List/dict/set comp improvements, SIM: simplify, PTH: prefer pathlib
+select = ['E', 'F', 'I', 'UP', 'B', 'C4', 'SIM', 'PTH']
+
+# Allow re-exports to look "unused" in your package facade
+[tool.ruff.lint.per-file-ignores]
+'src/eli_tools/__init__.py' = ['F401']
+
+# (Optional) Formatter settings - Ruff can also format code like Black
+[tool.ruff.format]
+line-ending = 'auto'
+
