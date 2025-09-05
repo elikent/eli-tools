@@ -31,6 +31,7 @@ line-length = 100
 target-version = "py312"
 extend-exclude = ['.venv']
 extend-include = ['*.ipynb']
+src = ['src']
 
 [tool.ruff.lint]
 # Keep it small and high-signal
