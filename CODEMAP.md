@@ -8,13 +8,17 @@ _Updated: 2025-11-10_
 
 | Category | Count | Notes |
 |-----------|--------|-------|
-| **Modules** | 2 | frame, fs |
-| **Functions complete** | 1 / 1 | 0 function pending |
+| **Modules** | 3 | frame, fs, text_utils |
+| **Functions complete** | 3 / 3 | 0 function pending |
 ---
 
 src/eli_tools
  fs.py/                     # paths and files
   [x] get_one_path          # returns exactly one matching path from data_dir. raises an error if zero matching paths or more than one matching path
+
+ text_utils.py/             # text utilITIES
+  [x] remove_diacritics     # removes diacritics
+  [x] canon                 # lower-cases all letters and replaces \s with hyphen
 
 
 ## 🚧 Next Steps
