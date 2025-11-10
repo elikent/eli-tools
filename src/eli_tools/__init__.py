@@ -1,10 +1,11 @@
 from .fs import get_one_path
 from .text_utils import canon, remove_diacritics
-from .log_utils import report
+from .log_utils import report, logging_config
 
 __all__ = [
     "get_one_path",
     "canon",
     "remove_diacritics",
     "report",
+    "logging_config",
     ]

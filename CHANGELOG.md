@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `text_utils.canon()`: lower-cases all letters and replaces \s with hyphen
 - `text_utils.remove_diacritics()`: removes diacritics
 - `log_utils.report()`: log results and optionally print
+- `log_utils.logging_config()`: Configure global logging for the application
 ### Changed
 
 ### Removed
