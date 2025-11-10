@@ -20,6 +20,9 @@ src/eli_tools
   [x] remove_diacritics     # removes diacritics
   [x] canon                 # lower-cases all letters and replaces \s with hyphen
 
+ log_utils.py/             # text utilITIES
+  [x] report               # log results and optionally print
+
 
 ## 🚧 Next Steps
 

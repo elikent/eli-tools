@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `text_utils.canon()`: lower-cases all letters and replaces \s with hyphen
 - `text_utils.remove_diacritics()`: removes diacritics
+- `log_utils.report()`: log results and optionally print
 ### Changed
 
 ### Removed
