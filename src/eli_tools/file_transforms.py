@@ -44,8 +44,6 @@ def combine_pdfs(
         The list of PDF Paths that would be (or were) merged, in order.
     """
 
-
-
     # Normalize sources to a list of paths to scan
     if isinstance(sources, Path):   # if sources is a Path, put it in a list and store in scan_paths
         scan_paths = [sources]
