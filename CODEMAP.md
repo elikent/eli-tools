@@ -13,17 +13,21 @@ _Updated: 2025-11-10_
 ---
 
 src/eli_tools
- fs.py/                     # paths and files
+ file_transforms.py
+  [x] combine_pdfs        # combine multiple pdfs into one
+  [x] remove_pages        # remove pages from pdf
+  [ ] convert_jpg_to_pdf  # convert jpg to pdf
+
+ fs.py/                     # paths and file systems
   [x] get_one_path          # returns exactly one matching path from data_dir. raises an error if zero matching paths or more than one matching path
 
- text_utils.py/             # text utilITIES
-  [x] remove_diacritics     # removes diacritics
-  [x] canon                 # lower-cases all letters and replaces \s with hyphen
-
- log_utils.py/              # text utilITIES
+ log_utils.py/              # logging and reporting
   [x] report                # log results and optionally print
   [x] logging_config        # configure global logging for the application
 
+ text_utils.py/             # human text normalization
+  [x] remove_diacritics     # removes diacritics
+  [x] canon                 # lower-cases all letters and replaces \s with hyphen
 
 
 ## 🚧 Next Steps
