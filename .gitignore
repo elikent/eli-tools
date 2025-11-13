@@ -10,6 +10,9 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 
+#logs
+logs/
+
 #git-ignore
 git-ignore/
 

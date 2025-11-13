@@ -4,8 +4,6 @@ from typing import Iterable, Callable, Optional, Sequence
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 from PyPDF2.errors import PdfReadError
 
-from google_access import report
-
 # to do: change report() -> report() and make changes suggested by coach
 
 logger = logging.getLogger(__name__)
@@ -50,7 +48,7 @@ def combine_pdfs(
     else:                           # else, just store in scan_paths
         scan_paths = list(sources)
     msg = f'{len(scan_paths)} paths passed to scan_paths'
-    report(msg)
+    #report(msg)
 
     # Collect candidate files
     pdfs: list[Path] = []   # create empty list of paths pdfs
@@ -59,7 +57,7 @@ def combine_pdfs(
             pdfs.append(p)
         elif p.is_file() and p.suffix.lower() != '.pdf':
             msg = f'{p} is not a pdf file. removed from pdf list'
-            report(msg, 'warning')
+            #report(msg, 'warning')
         elif p.is_dir():    # if p is a directory, gather files in that directory
             if patterns:    # if patterns, gather only that match any of the patterns
                 for pat in patterns:
@@ -71,7 +69,7 @@ def combine_pdfs(
             # silently skip non-existent
             continue
     msg = f'{len(pdfs)} pdfs found'
-    report(msg)
+    #report(msg)
 
     # Deduplicate & keep only files
     uniq = []
@@ -86,15 +84,15 @@ def combine_pdfs(
             seen.add(fp)
     uniq_count1 = len(uniq)
     msg = f'{uniq_count1} unique pdfs found'
-    report(msg)
+    #report(msg)
 
     # Apply predicate filter if provided
     if match:
         uniq = [p for p in uniq if match(p)]
         msg1 = f'{len(uniq)} pdfs after predicate filter'
         msg2 = f'{uniq_count1 - len(uniq)} pdfs removed by predicate filter'
-        report(msg1)
-        report(msg2)
+        #report(msg1)
+        #report(msg2)
 
     # Sort
     if sort_key is None:
@@ -102,7 +100,7 @@ def combine_pdfs(
     else:
         uniq.sort(key=sort_key)
     msg = f'pdfs sorted by {sort_key if sort_key else "name"}'
-    report(msg)
+    #report(msg)
 
     # Dry run?
     if dry_run:
@@ -119,17 +117,17 @@ def combine_pdfs(
                 merger.append(str(pdf))
             except (FileNotFoundError, PermissionError, PdfReadError) as e:
                 msg = f'Failed to append {pdf}: {e}'
-                report(msg, 'error')
+                #report(msg, 'error')
                 continue
 
         output_file.parent.mkdir(parents=True, exist_ok=True)
         try:
             merger.write(str(output_file))
             msg = f'wrote {len(merger)} to {output_file}'
-            report(msg)
+            #report(msg)
         except PermissionError as e:
             msg = f'Failed to write {output_file}: {e}'
-            report(msg, 'critical')
+            #report(msg, 'critical')
             raise
 
     finally:
@@ -154,7 +152,7 @@ def remove_pages(input_pdf: Path, output_pdf: Path, pages_to_remove: list[int]) 
             bad.append(p)
     if bad:
         msg = f"Warning: pages out of range and skipped: {bad}"
-        report(msg, "warning")
+        #report(msg, "warning")
 
     for i, page in enumerate(reader.pages):
         if i not in zero_based:

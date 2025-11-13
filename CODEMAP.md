@@ -22,8 +22,7 @@ src/eli_tools
   [x] get_one_path          # returns exactly one matching path from data_dir. raises an error if zero matching paths or more than one matching path
 
  log_utils.py/              # logging and reporting
-  [x] report                # log results and optionally print
-  [x] logging_config        # configure global logging for the application
+  [x] setup_logging         # create and customize logging
 
  text_utils.py/             # human text normalization
   [x] remove_diacritics     # removes diacritics

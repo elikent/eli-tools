@@ -3,88 +3,127 @@ from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Optional
 
+DEFAULT_FMT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+DEFAULT_DATE_FMT = "%Y-%m-%d %H:%M:%S"
 
-def report(
-    msg: str,
-    log_level: str = "info",
-    *,
-    verbose: bool = False,
-    logger: logging.Logger | None = None) -> None:
-    '''Purpose: Set log level and optionally print
-
-    Args:
-        msg: Message to log
-        log_level: log_level. options are v
-        verbose: if True, print msg to console
-        logger:
-
-    Steps:
-        1. create _map of log_level string to logging.level
-        2. get log_fn by mapping log_level var to logging.level via _map
-        3. log message
-        4. print msg to console if verbose or log_level != "info"
-    '''
-
-    # Map string to logging level
-    _map = {
-        "info": logging.info,
-        "warning": logging.warning,
-        "error": logging.error,
-        "critical": logging.critical,
-        "debug": logging.debug,
-    }
-    # Get specified logging level. Raise error if log_level typed in wrong
-    if not log_level.lower() in _map.keys():
-        raise ValueError(f'Invalid log_level: {log_level}. Options are [k for k in _maps.keys()]')
-    else:
-        log_fn = _map.get(log_level.lower(), logging.info)
-        log_fn(msg)
-        if verbose or log_level != "info":
-            print(msg)
-
-def logging_config(
-        level: int = logging.INFO,
-        fmt: str = "%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-        log_file: Optional[Path] = None,
-        max_bytes: int = 5_000_000, # ~5 MB per file
-        backup_count: int = 5,
-        console: bool = True,
-        force: bool = True
-        ) -> None:
-
-    '''Configure global logging for the application.
-
-    Args:
-        level: Logging level (e.g., logging.INFO, logging.DEBUG)
-        fmt: Format string for log messages. Defauylt = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
-        log_file: Path object for log file.
-        max_bytes: Max size per log file before rotation (default = ~5MB).
-        backup_count: Number of rotates log files to keep.
-        console: If True, log to console.
-        force: If True, recopngireu even if logging was already set up.
-    '''
-
-    # Declare empty list of handlers. Possible handlers = StreamHandler (console) and RotatingFileHandler (file)
-    handlers = []
-
-    # File handler if requested
-    if log_file:
-        log_file = Path(log_file)
-        log_file.parent.mkdir(parents=True, exist_ok=True)
-        file_handler = RotatingFileHandler(
-            log_file, maxBytes=max_bytes, backupCount=backup_count, encoding="utf-8"
-        )
-        file_handler.setFormatter(logging.Formatter(fmt))
-        handlers.append(file_handler)
-
-    # Console handler if not surpressed
-    if console:
-        console_handler = logging.StreamHandler()
-        console_handler.setFormatter(logging.Formatter(fmt))
-        handlers.append(console_handler)
-
-    logging.basicConfig(
-        level=level,
-        handlers=handlers,
-        force=force
+def make_formatter(
+        fmt: str,
+        date_fmt: str,
+        ) -> logging.Formatter:
+    """
+    Return a logging formatter object.
+    """
+    return logging.Formatter(
+        fmt,
+        datefmt= date_fmt,
     )
+
+def attach_console_handler(
+        logger: logging.Logger,
+        formatter: logging.Formatter,
+        level: int,
+        ):
+    """
+    Attach a stream handler to logger.
+    Default level is NOTSET.
+     - Currently inherits level from app_level in setup_logging()
+     - setup_logging() does not allow for customization of console_level. Can be added later.
+    """
+    ch = logging.StreamHandler()
+    ch.setLevel(level)
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+
+def attach_file_handler(
+        logger: logging.Logger,
+        file_name: str | Path,
+        formatter: logging.Formatter,
+        level: int,
+        rotate: bool,
+        file_mode: str
+        ):
+    """
+    Attach a file handler logger.
+    Inherits all from setup_logging().
+    Default behavior: attaches a RotatingFileHandler to logger.
+    Optional behavior: attach a FileHandler to logger.
+    """
+    # Make directory if doesn't exist
+    Path(file_name).parent.mkdir(parents=True, exist_ok=True)
+
+    # if rotate, create a RotatingFileHandler object
+    if rotate:
+        fh = RotatingFileHandler(
+            filename=file_name,
+            maxBytes=5_000_000,
+            backupCount=5,
+            encoding='utf-8'
+        )
+    # else, create a FileHandler object
+    else:
+        fh = logging.FileHandler(file_name, mode=file_mode, encoding='utf-8')
+    # set FileHandler object level and format
+    fh.setLevel(level)
+    fh.setFormatter(formatter)
+    # attach FileHandler to logger
+    logger.addHandler(fh)
+
+def clear_handlers(logger: logging.Logger):
+    """Clear all handlers from specific logger"""
+    for h in list(logger.handlers):
+        logger.removeHandler(h)
+        h.close()
+
+def setup_logging(
+        name: str,
+        file_name: str | Path,
+        app_level: int = logging.INFO,
+        console_level: int = logging.NOTSET,
+        file_level: int = logging.WARNING,
+        log_fmt: str = DEFAULT_FMT,
+        date_fmt: str = DEFAULT_DATE_FMT,
+        rotate: bool = True,
+        file_mode: str = 'a'
+        ) -> logging.Logger:
+
+    """
+    Returns an app-level logging object with a Console Handler and a File Handler, and sets propagate = False.
+
+    Usage:
+    from eli_tools.log_utils import setup_logging
+    log = setup_logging(name="my_app", file_name="logs/my_app.log")
+    log.info("Job started")
+    log.warning("Something fishy")
+    log.error("Something failed)
+
+    Required args:
+    - app-level log name
+    - file name or path for file log
+
+    By default:
+    - logging object level set to INFO
+    - console level not set
+    - file level set to WARNING
+    - log format set to "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+    - date format set to "%Y-%m-%d %H:%M:%S"
+    - file is a rotating file with max 5_000_000 bytes and 5 backups
+
+    Options:
+    - set app-level, console level and file level
+    - customize log format and date format locally
+    - create a FileHandler rather than a RotatingFileHandler and set filemode (default is 'a')
+
+    Future features:
+    - add ability to create and customize child logs
+    - add ability to set propagate = True
+    """
+
+    app = logging.getLogger(name)
+    app.setLevel(app_level)
+    app.propagate = False
+
+    formatter = make_formatter(log_fmt, date_fmt)
+    attach_console_handler(app, formatter, console_level)
+    attach_file_handler(app, file_name, formatter,file_level, rotate, file_mode)
+
+    return app
