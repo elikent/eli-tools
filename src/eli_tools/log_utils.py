@@ -87,7 +87,7 @@ def setup_logging(
         ) -> logging.Logger:
 
     """
-    Returns an app-level logging object with a Console Handler and a File Handler, and sets propagate = False.
+    Returns a root logging object with a Console Handler and a File Handler, and sets propagate = False.
 
     Usage:
     from eli_tools.log_utils import setup_logging

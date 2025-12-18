@@ -27,6 +27,10 @@ src/eli_tools
  text_utils.py/             # human text normalization
   [x] remove_diacritics     # removes diacritics
   [x] canon                 # lower-cases all letters and replaces \s with hyphen
+  [x] normalize_phone       # normalizes phone numbers FOR MATCHING: DOES NOT check for valid phone format
+  [x] normalize_phone       # normalizes emails FOR MATCHING: DOES NOT check for valid email format
+  [ ] is_valid_phone        # check for valid us phone format
+  [ ] is_valid_email        # check for valid email format
 
 
 ## 🚧 Next Steps

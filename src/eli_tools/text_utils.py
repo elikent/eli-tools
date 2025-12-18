@@ -1,13 +1,16 @@
 """
 Utilities for normalizing and cleaning up text.
 """
-
+import logging
 import unicodedata
 import re
 
+logger = logging.getLogger(__name__)
+
+#----------------------------------------- remove_diacritics() is part of canon()---------------------------------------------
 def remove_diacritics(text: str) -> str:
     """Return text without accents/diacritics.
-    
+
     Example:
         >>> remove_diacritics("Señor Niño")
         'Senor Nino'
@@ -18,11 +21,11 @@ def remove_diacritics(text: str) -> str:
 def canon(name: str) -> str:
     """Canonicalize a filename or text string for matching.
 
-    - Removes diacritics
-    - Lowercases
-    - Normalizes dashes/underscores to spaces
-    - Collapses multiple spaces
-    - Strips leading/trailing spaces
+    - Remove diacritics
+    - Lowercase
+    - Normalize dashes/underscores to spaces
+    - Collapse multiple spaces
+    - Strip leading/trailing spaces
 
     Example:
         >>> canon(" Recíbo---de_dopaje.PDF ")
@@ -39,3 +42,66 @@ def canon(name: str) -> str:
     # strip leading/trailing spaces
     s = s.strip()
     return s
+
+def normalize_email(email: str) -> str:
+    """
+    Normalize emails FOR MATCHING
+
+    - Lowercase
+    - Strip surrounding whitespace
+    - Remove internal spaces (common data error)
+
+    DOES NOT:
+    - Remove dots
+    - Remove tags
+    - Change domains
+    - Check for '@'
+    """
+
+    if not email:
+        return ""
+
+    if not isinstance(email, str):
+        logger.debug(
+            'normalize_email received a non-string value: %r (%s)',
+            email,
+            type(email).__name__,
+        )
+        email = str(email)
+
+    s = email.strip().lower()
+    s = s.replace(' ', '')
+    return s
+
+def normalize_phone(phone: str) -> str:
+    """
+    Normalize US phone numbers FOR MATCIHNG
+
+    - Keep digits only
+    - Normalize to 10 digits
+    - Drop leading 1 if present
+
+    DOES NOT:
+    - Validate phone (ensure 10 digits)
+    """
+
+    if not phone:
+        return ""
+
+    # cast to str if not str
+    if isinstance(phone, str):
+        logger.debug(
+            'normalize_phone received a non-string value: %r, (%s)',
+            phone,
+            type(phone).__name__
+        )
+        phone = str(phone)
+
+    # strip to digits only
+    digits = re.sub(r'\D', '', phone)
+
+    # drop us country code if present
+    if len(digits) == 11 and digits.startswith('1'):
+        digits = digits[1:]
+
+    return digits
