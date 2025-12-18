@@ -6,6 +6,7 @@ from typing import Optional
 DEFAULT_FMT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 DEFAULT_DATE_FMT = "%Y-%m-%d %H:%M:%S"
 
+#-------------- All functions below are part of setup_logging() ----------------------------
 def make_formatter(
         fmt: str,
         date_fmt: str,
@@ -24,9 +25,9 @@ def attach_console_handler(
         level: int,
         ):
     """
-    Attach a stream handler to logger.
+    Attach a console handler to logger.
     Default level is NOTSET.
-     - Currently inherits level from app_level in setup_logging()
+     - Currently inherits level from log_level in setup_logging()
      - setup_logging() does not allow for customization of console_level. Can be added later.
     """
     ch = logging.StreamHandler()
@@ -43,7 +44,7 @@ def attach_file_handler(
         file_mode: str
         ):
     """
-    Attach a file handler logger.
+    Attach a file handler to logger.
     Inherits all from setup_logging().
     Default behavior: attaches a RotatingFileHandler to logger.
     Optional behavior: attach a FileHandler to logger.
@@ -75,9 +76,8 @@ def clear_handlers(logger: logging.Logger):
         h.close()
 
 def setup_logging(
-        name: str,
         file_name: str | Path,
-        app_level: int = logging.INFO,
+        log_level: int = logging.INFO,
         console_level: int = logging.NOTSET,
         file_level: int = logging.WARNING,
         log_fmt: str = DEFAULT_FMT,
@@ -94,7 +94,7 @@ def setup_logging(
     log = setup_logging(name="my_app", file_name="logs/my_app.log")
     log.info("Job started")
     log.warning("Something fishy")
-    log.error("Something failed)
+    log.error("Something failed")
 
     Required args:
     - app-level log name
@@ -118,12 +118,11 @@ def setup_logging(
     - add ability to set propagate = True
     """
 
-    app = logging.getLogger(name)
-    app.setLevel(app_level)
-    app.propagate = False
+    root = logging.getLogger()
+    root.setLevel(log_level)
 
     formatter = make_formatter(log_fmt, date_fmt)
-    attach_console_handler(app, formatter, console_level)
-    attach_file_handler(app, file_name, formatter,file_level, rotate, file_mode)
+    attach_console_handler(root, formatter, console_level)
+    attach_file_handler(root, file_name, formatter,file_level, rotate, file_mode)
 
-    return app
+    return root
