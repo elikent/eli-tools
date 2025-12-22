@@ -5,6 +5,14 @@ from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 from PyPDF2.errors import PdfReadError
 
 # to do: change report() -> report() and make changes suggested by coach
+try:
+    from PyPDF2 import PdfMerger, PdfReader, PdfWriter
+    from PyPDF2.errors import PdfReadError
+except ModuleNotFoundError as e:
+    raise ModuleNotFoundError(
+        "PyPDF2 is required for PDF utilities. Install with: pip install eli-tools[pdf]"
+    ) from e
+
 
 logger = logging.getLogger(__name__)
 

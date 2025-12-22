@@ -7,6 +7,7 @@ dependencies = []
 
 # For helpers specific to pandas or pyarrow, people can pip install -e ../eli-tools[pandas]
 [project.optional-dependencies]
+pdf = ["PyPDF2>=3.0.0"]
 pandas = ["pandas>=2.2", "pyarrow>=16"]
 dev = ["pytest>=8", "ruff>=0.5", "mypy>=1.10"]
 
