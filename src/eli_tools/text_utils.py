@@ -43,13 +43,14 @@ def canon(name: str) -> str:
     s = s.strip()
     return s
 
-def normalize_email(email: str) -> str:
+def normalize_email(email: str, *, username: bool = False) -> str:
     """
     Normalize emails FOR MATCHING
 
     - Lowercase
     - Strip surrounding whitespace
     - Remove internal spaces (common data error)
+    - if username = True, return only local part (before '@')
 
     DOES NOT:
     - Remove dots
@@ -71,7 +72,11 @@ def normalize_email(email: str) -> str:
 
     s = email.strip().lower()
     s = s.replace(' ', '')
-    return s
+
+    if username:
+        return s.split('@', 1)[0]
+    else:
+        return s
 
 def normalize_phone(phone: str) -> str:
     """
