@@ -43,6 +43,26 @@ def canon(name: str) -> str:
     s = s.strip()
     return s
 
+def normalize_name(name: str) -> str:
+    """
+    Normalize names FOR MATCHING
+
+    - canonizes
+    - removes .
+    """
+
+    #canonize
+    s = canon(name)
+
+    # remove dots preceded by a letter (e.g. "jose m." -> "jose m")
+    s = re.sub(r'(?<=[A-Za-z])\.', '', s)
+
+    # collapse multiple spaces (dot removal can create double spaces)
+    s = re.sub(r"\s+", " ", s).strip()
+
+    return s
+
+
 def normalize_email(email: str, *, username: bool = False) -> str:
     """
     Normalize emails FOR MATCHING

@@ -1,7 +1,7 @@
 from . import fs, text_utils, log_utils
 
 from .fs import get_one_path
-from .text_utils import canon, remove_diacritics, normalize_email, normalize_phone
+from .text_utils import canon, remove_diacritics, normalize_name, normalize_email, normalize_phone
 from .log_utils import setup_logging
 
 __all__ = [
@@ -11,6 +11,7 @@ __all__ = [
     "get_one_path",
     "canon",
     "remove_diacritics",
+    "normalize_name",
     "normalize_email",
     "normalize_phone",
     "setup_logging",
