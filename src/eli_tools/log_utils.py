@@ -91,7 +91,7 @@ def setup_logging(
 
     Usage:
     from eli_tools.log_utils import setup_logging
-    log = setup_logging(name="my_app", file_name="logs/my_app.log")
+    log = setup_logging(file_name="logs/my_app.log")
     log.info("Job started")
     log.warning("Something fishy")
     log.error("Something failed")
