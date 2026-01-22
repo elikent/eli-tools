@@ -79,7 +79,7 @@ def setup_logging(
         file_name: str | Path,
         log_level: int = logging.INFO,
         console_level: int = logging.NOTSET,
-        file_level: int = logging.WARNING,
+        file_level: int = logging.INFO,
         log_fmt: str = DEFAULT_FMT,
         date_fmt: str = DEFAULT_DATE_FMT,
         rotate: bool = True,
