@@ -119,6 +119,7 @@ def setup_logging(
     """
 
     root = logging.getLogger()
+    clear_handlers(root)
     root.setLevel(log_level)
 
     formatter = make_formatter(log_fmt, date_fmt)
